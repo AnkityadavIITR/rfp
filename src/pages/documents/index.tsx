@@ -8,6 +8,7 @@ import useIsMobile from "~/hooks/utils/useIsMobile";
 import { backendClient } from "~/api/backend";
 import { useQuestionStore, clearData } from "~/utils/store/questionStore";
 import MobileWarningComponent from "~/components/document/MobileWarningComponent";
+import { useAuth } from "@clerk/nextjs";
 
 
 export interface Chunk{
@@ -32,6 +33,7 @@ export interface ApiResponse {
 export default function Conversation() {
   const router = useRouter();
   const { isMobile } = useIsMobile();
+  const { userId } = useAuth();
   const [loading, setLoading] = useState(true);
 
   const queries = useQuestionStore((state) => state.queries);
@@ -41,6 +43,12 @@ export default function Conversation() {
   const addApiResponse = useQuestionStore((state) => state.addApiResponse);
   const apiResponse = useQuestionStore((state) => state.apiResponse);
 
+
+  useEffect(()=>{
+    if(!userId){
+      router.push("/").catch((e)=>console.log(e))
+    }
+  },[])
   useEffect(() => {
     const fetchData = async () => {
       try {
