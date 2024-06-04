@@ -74,7 +74,7 @@ const PdfInput: React.FC<PdfInputProps> = ({ setValue }) => {
     <div className="mt-5 flex h-min  w-full flex-col items-center justify-center rounded-[16px] border-2 bg-white shadow-xl ">
     <div className="mx-4 mb-2 mt-4 self-start">
       <h1 className="text-[18px] font-medium">Upload files</h1>
-      <p className="mt-1 text-[12px] text-gray-800">
+      <p className="mt-1 text-[14px] text-gray-800">
         Upload relevant files to the database
       </p>
     </div>
