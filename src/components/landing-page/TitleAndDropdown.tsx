@@ -73,7 +73,7 @@ export const TitleAndDropdown = () => {
         <div className=" flex w-full gap-x-4">
           <Avatar className="mx-auto">
             <AvatarImage
-              src="https://github.com/shadcn.png"
+              src="https://st3.depositphotos.com/8950810/17657/v/450/depositphotos_176577870-stock-illustration-cute-smiling-funny-robot-chat.jpg"
               alt="@shadcn"
               className=""
             />

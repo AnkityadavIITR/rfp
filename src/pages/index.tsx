@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useIsMobile from "~/hooks/utils/useIsMobile";
-
+import { useRouter } from "next/router";
 import type { NextPage } from "next";
 import { TitleAndDropdown } from "~/components/landing-page/TitleAndDropdown";
+import { useAuth } from "@clerk/nextjs";
 
 const LandingPage: NextPage = () => {
   const { isMobile } = useIsMobile()
+  const {userId}=useAuth();
+  const router=useRouter()
+  useEffect(()=>{
+    if(!userId){
+      router.push("/signup")
+    }
+  })
 
   return (
     <>
