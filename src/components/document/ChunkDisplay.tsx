@@ -12,9 +12,6 @@ export const ChunkDisplay = () => {
       pageNumber: number,
       citation: Citation
     ) => {
-      console.log("documentid", documentId);
-      console.log("pgn", pageNumber);
-      console.log("cita", citation);
       setPdfFocusState({ documentId, pageNumber, citation });
     };
 

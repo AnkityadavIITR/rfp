@@ -47,7 +47,7 @@ const ExcelInput = () => {
     
           if (excelFile.length > 0) {
             addExcels(excelFile);
-            console.log("files", excelFile);
+            // console.log("files", excelFile);
           } else {
             alert("Please select only Excel or CSV files.");
           }
@@ -84,7 +84,7 @@ const ExcelInput = () => {
                 excels
               );
               if(excelResponse){
-                console.log("Excel response:", excelResponse);
+                // console.log("Excel response:", excelResponse);
                 addQuestions(excelResponse.details);
                 setIsExcelUploaded(true);
               }
@@ -104,10 +104,11 @@ const ExcelInput = () => {
   return (
     <div className="mt-5 flex h-min flex-col items-center justify-center rounded-[16px] border-2 bg-white shadow-xl ">
     <div className="mx-4 mb-2 mt-4 self-start">
-      <h1 className="text-[18px] font-medium">
-        Here, you can upload incomplete questionnaires. I will detect
+    <h1 className="text-[18px] font-medium">Upload files</h1>
+      <p className="mt-1 text-[14px] text-gray-800">
+      Here, you can upload incomplete questionnaires. I will detect
         the questions and provide answers for each of them.
-      </h1>
+      </p>
     </div>
     <div className="mt-2 flex  w-full flex-col justify-start gap-y-3 p-4 ">
       {isExcelUploaded ? (
@@ -154,7 +155,7 @@ const ExcelInput = () => {
                   <Image src="/excel.svg" alt="Excel SVG" width={20} height={20} />
                 </div>
                 <div className="ml-3 mr-[10px] line-clamp-1 w-[300px]">
-                  <p className="text-[14px] ">p{excel.name}</p>
+                  <p className="text-[14px] ">{excel.name}</p>
                 </div>
                 <div className="">
                   <Trash2
@@ -193,9 +194,13 @@ const ExcelInput = () => {
               {isExcelUploaded ? (
                 <p>next</p>
               ) : (
-                <div className="flex">
-                  <Send strokeWidth={1.25} size={16} className="mr-1" />
-                  <p>Send</p>
+                <div className="flex ">
+                  <Send
+                    strokeWidth={1.25}
+                    size={16}
+                    className="mr-2 my-auto"
+                  />
+                  <p className=''>Send</p>
                 </div>
               )}
             </>

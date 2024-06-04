@@ -145,7 +145,7 @@ console.log("documentFocuse",documentFocused);
 
   useEffect(() => {
     maybeHighlight();
-    console.log("call the highlight");
+    // console.log("call the highlight");
     
   }, [documentFocused, inView]);
 
@@ -156,7 +156,7 @@ console.log("documentFocuse",documentFocused);
         pdfFocusState.citation?.pageNumber === pageNumber + 1 &&
         !isHighlighted
       ) {
-        console.log("pagenum in virtual",pdfFocusState.citation?.pageNumber);
+        // console.log("pagenum in virtual",pdfFocusState.citation?.pageNumber);
         
         multiHighlight(
           pdfFocusState.citation?.snippet,
@@ -165,7 +165,7 @@ console.log("documentFocuse",documentFocused);
         );
         setIsHighlighted(true);
       }
-      console.log("call maybehilt");
+      // console.log("call maybehilt");
       
     }, 500),
     [pdfFocusState.citation?.snippet, pageNumber, isHighlighted]

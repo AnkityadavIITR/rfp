@@ -70,7 +70,7 @@ export const TitleAndDropdown = () => {
         </div>
       </Container>
       <Container className="mt-4">
-        <div className="mx-auto flex w-[80%] gap-x-4">
+        <div className=" flex w-full gap-x-4">
           <Avatar className="mx-auto">
             <AvatarImage
               src="https://github.com/shadcn.png"
@@ -79,8 +79,8 @@ export const TitleAndDropdown = () => {
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <div className="text-center text-[22px]">
-            Hello! I&pos;m Pedro, your assistant for cybersecurity, GDPR, and more.
+          <div className="text-center text-[20px] my-auto">
+            Hello! I&apos;m Pedro, your assistant for cybersecurity, GDPR, and more.
             How can I help you today?
           </div>
         </div>
@@ -110,8 +110,7 @@ export const TitleAndDropdown = () => {
           <div className="mt-5 flex min-h-[320px] w-full flex-col items-center justify-center rounded-[16px] border-2 bg-white shadow-xl ">
             <div className="mx-4 mb-2 mt-4 self-start">
               <h1 className="text-center text-[18px] font-medium">
-                In Q&apos;A, you can ask me questions, and I&apso;ll do my best to provide
-                helpful answers.
+              In Q&amp;A, you can ask me questions, and I&apos;ll do my best to provide helpful answers.
               </h1>
             </div>
             <div className="mt-2 flex  w-full flex-col justify-start gap-y-6 p-4 ">

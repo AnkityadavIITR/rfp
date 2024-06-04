@@ -23,7 +23,7 @@ const AccordionComponent = () => {
         if (queries[activeQuery] && editableResponse != "") {
             try {
                 const res = await backendClient.saveQna("/save-qna/", queries[activeQuery] || "", editableResponse);
-                console.log("Res", res);
+                // console.log("Res", res);
                 setIsEditing(false)
             } catch (e) {
                 console.log("error saving response", e)

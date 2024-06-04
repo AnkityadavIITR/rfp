@@ -28,7 +28,7 @@ const PdfInput: React.FC<PdfInputProps> = ({ setValue }) => {
     
           if (pdfs.length > 0) {
             addFiles(pdfs);
-            console.log("files", files);
+            // console.log("files", files);
           } else {
             alert("Please select only Excel or CSV files.");
           }
@@ -58,7 +58,7 @@ const PdfInput: React.FC<PdfInputProps> = ({ setValue }) => {
               files
             );
             
-            console.log("PDF response:", pdfResponse);
+            // console.log("PDF response:", pdfResponse);
             setIsPdfUploaded(true);
           } catch (e) {
             console.log(e);
@@ -66,7 +66,7 @@ const PdfInput: React.FC<PdfInputProps> = ({ setValue }) => {
             setLoading(false);
           }
         } else {
-          console.log("click");
+          // console.log("click");
           setValue("excel");
         }
       };
@@ -221,13 +221,13 @@ const PdfInput: React.FC<PdfInputProps> = ({ setValue }) => {
               {isPdfUploaded ? (
                 <p>next</p>
               ) : (
-                <div className="flex">
+                <div className="flex ">
                   <Send
                     strokeWidth={1.25}
                     size={16}
-                    className="mr-1"
+                    className="mr-2 my-auto"
                   />
-                  <p>Send</p>
+                  <p className=''>Send</p>
                 </div>
               )}
             </>

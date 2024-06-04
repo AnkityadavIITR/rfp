@@ -48,7 +48,7 @@ export const multiHighlight = (
     .toString()
     .trim()
     .replace(/(\r\n|\n|\r)/g, "");
-    console.log("searchstring before",searchString);
+    // console.log("searchstring before",searchString);
     
     const searchWords = searchString.split(" ");
 
@@ -56,7 +56,7 @@ export const multiHighlight = (
   if (!lenSearchString) {
     return;
   }
-  console.log("lenserachstring",lenSearchString);
+  // console.log("lenserachstring",lenSearchString);
   
   const firstWord = searchWords[0];
   if (!firstWord) {
@@ -77,7 +77,7 @@ export const multiHighlight = (
       }
     }
   }
-  console.log("searchdata", searchData);
+  // console.log("searchdata", searchData);
   
   const options = {
     includeScore: true,
@@ -91,7 +91,7 @@ export const multiHighlight = (
 
   const fuse = new Fuse(searchData, options);
   const result = fuse.search(searchString);
-  console.log("result",result);
+  // console.log("result",result);
   
 
   if (result.length > 0) {

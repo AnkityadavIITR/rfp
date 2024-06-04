@@ -54,7 +54,7 @@ class BackendClient {
 
   public async postExcelFile(endpoint: string, files: File[]): Promise<UploadExcelResponse | undefined> {
     const url = backendUrl + endpoint;
-    console.log("excels", files);
+    // console.log("excels", files);
 
     const formData = new FormData();
     files.forEach((file) => {
