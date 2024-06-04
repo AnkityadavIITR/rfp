@@ -118,7 +118,7 @@ export const TitleAndDropdown = () => {
                 <div className="flex gap-x-2">
                   <Input
                     type="text"
-                    placeholder="ask question"
+                    placeholder="Ask question"
                     value={question}
                     onChange={(e) => setQuestion(e.target.value)}
                   />
@@ -165,7 +165,7 @@ export const TitleAndDropdown = () => {
                       <div className="loader h-3 w-3 rounded-full border-2 border-gray-200 ease-linear"></div>
                     </div>
                   ) : (
-                    <>{!inputQuestion ? "Ask a question" : "submit"}</>
+                    <>{!inputQuestion ? "Ask a question" : "Submit"}</>
                   )}
                 </Button>
               </div>

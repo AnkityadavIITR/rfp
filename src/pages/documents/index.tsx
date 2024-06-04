@@ -51,10 +51,10 @@ export default function Conversation() {
               question
             );
             if (responseData) {
-              const response = formatMarkdown(responseData.message);
-              addResponse(response);
+              // const response = formatMarkdown(responseData.message);
+              addResponse(responseData.message);
               addApiResponse({
-                reponseMessage: response,
+                reponseMessage: responseData.message,
                 chunks: responseData.Chunks,
                 files: responseData.pdf_data.map((data: PdfData) => ({
                   id: data.pdf_name,

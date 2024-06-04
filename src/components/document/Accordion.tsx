@@ -12,6 +12,7 @@ import { useState } from "react";
 import { ChunkDisplay } from "./ChunkDisplay";
 import { backendClient } from "~/api/backend";
 import { Textarea } from "../ui/textarea";
+import { SquarePen } from "lucide-react";
 
 const AccordionComponent = () => {
     const queries = useQuestionStore((state) => state.queries);
@@ -19,7 +20,7 @@ const AccordionComponent = () => {
     const setActiveQuery = useQuestionStore((state) => state.setActiveQuery);
     const activeQuery = useQuestionStore((state) => state.activeQuery);
 
-    const handleSaveResponse = async ():Promise<void> => {
+    const handleSaveResponse = async (): Promise<void> => {
         if (queries[activeQuery] && editableResponse != "") {
             try {
                 const res = await backendClient.saveQna("/save-qna/", queries[activeQuery] || "", editableResponse);
@@ -33,6 +34,7 @@ const AccordionComponent = () => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [editableResponse, setEditableResponse] = useState("");
+    const [isHovered, setIsHovered] = useState(false);
     return (
         <Accordion
             type="single"
@@ -43,11 +45,11 @@ const AccordionComponent = () => {
             {queries.map((query, i) => (
                 <AccordionItem
                     value={`item-${i}`}
-                    className="bg-gray-200 text-left"
+                    className={responses[i] ? "bg-orange-200 text-left" : "bg-gray-200 text-left"}
                     key={i}
                 >
                     <AccordionTrigger
-                        className="p-[10px] text-left"
+                        className={responses[i] ? "p-[10px] text-left" : "p-[10px] text-left"}
                         onClick={() => setActiveQuery(i)}
                     >
                         {query}
@@ -57,21 +59,21 @@ const AccordionComponent = () => {
                             <>
                                 {!isEditing ? (
                                     <>
-                                        <div className="w-full border bg-blue-200 rounded-xl">
-                                            <ReactMarkdown className="p-2 overflow-scroll">
+                                        <div className="w-full flex border bg-blue-100 rounded-xl relative"
+                                            onMouseEnter={() => setIsHovered(true)}
+                                            onMouseLeave={() => setIsHovered(false)}>
+                                            <ReactMarkdown className="p-2">
                                                 {responses[i]}
                                             </ReactMarkdown>
-                                        </div>
-                                        <div className="mt-2 flex w-full">
-                                            <Button
-                                                className="self-end"
-                                                onClick={() => {
+                                            {
+                                                isHovered &&
+                                                <div className="absolute bg-blue-100 top-[8px] right-[8px] hover:cursor-pointer" onClick={() => {
                                                     setIsEditing(true);
                                                     setEditableResponse(responses[i] || "");
-                                                }}
-                                            >
-                                                Edit response
-                                            </Button>
+                                                }}>
+                                                    <SquarePen strokeWidth={1.25} size={20} />
+                                                </div>
+                                            }
                                         </div>
                                     </>
                                 ) : (
@@ -96,10 +98,10 @@ const AccordionComponent = () => {
                                                     });
                                                 }}
                                             >
-                                                save response
+                                                Save Response
                                             </Button>
-                                            <Button onClick={()=>setIsEditing(false)}>
-                                                cancel
+                                            <Button onClick={() => setIsEditing(false)}>
+                                                Cancel
                                             </Button>
                                         </div>
                                     </>
