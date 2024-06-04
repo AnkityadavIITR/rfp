@@ -8,10 +8,11 @@ import { useAuth } from "@clerk/nextjs";
 const LandingPage: NextPage = () => {
   const { isMobile } = useIsMobile()
   const {userId}=useAuth();
-  const router=useRouter()
+  const router=useRouter();
+
   useEffect(()=>{
     if(!userId){
-      router.push("/signup")
+      router.push("/signup").then(()=>console.log("Success")).catch((e)=>console.log("got error "))
     }
   })
 
