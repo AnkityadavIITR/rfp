@@ -14,7 +14,7 @@ const LandingPage: NextPage = () => {
     if(!userId){
       router.push("/signup").then(()=>console.log("Success")).catch((e)=>console.log("got error "))
     }
-  })
+  },[])
 
   return (
     <>

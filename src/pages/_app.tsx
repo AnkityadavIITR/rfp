@@ -8,10 +8,13 @@ import Layout from "~/components/Layout";
 import { type AppType } from "next/dist/shared/lib/utils";
 import { Toaster } from "~/components/ui/toaster";
 import HydrationZustand from "~/components/HydrationZustand";
-
+import { useRouter } from 'next/router'
 ReactGA.initialize(GOOGLE_ANALYTICS_ID);
+// const publicPages = ['/']
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  // const { pathname } = useRouter()
+  // const isPublicPage = publicPages.includes(pathname)
   return (
     <ClerkProvider>
       <HydrationZustand>

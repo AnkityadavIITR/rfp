@@ -36,6 +36,7 @@ export default function Conversation() {
   const { userId } = useAuth();
   const [loading, setLoading] = useState(true);
 
+
   const queries = useQuestionStore((state) => state.queries);
   const responses = useQuestionStore((state) => state.responses);
   const addResponse = useQuestionStore((state) => state.addResponse);
@@ -44,13 +45,6 @@ export default function Conversation() {
   const apiResponse = useQuestionStore((state) => state.apiResponse);
 
 
-  useEffect(()=>{
-    // console.log("userId",userId);
-    
-    if(!userId && !apiResponse.length){
-      router.push("/").catch((e)=>console.log(e))
-    }
-  },[])
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -81,13 +75,12 @@ export default function Conversation() {
       }
     };
 
-    if (queries.length > responses.length) {
+    if (queries.length > responses.length && userId) {
       fetchData().then(() => {
         console.log('Response saved successfully');
     }).catch((error) => {
         console.error('Failed to save response', error);
-    });
-    }
+    });}
   }, []);
 
   useEffect(() => {
