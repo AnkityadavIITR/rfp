@@ -45,9 +45,9 @@ export default function Conversation() {
 
 
   useEffect(()=>{
-    console.log("userId",userId);
+    // console.log("userId",userId);
     
-    if(!userId){
+    if(!userId && !apiResponse.length){
       router.push("/").catch((e)=>console.log(e))
     }
   },[])
