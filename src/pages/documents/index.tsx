@@ -46,41 +46,39 @@ export default function Conversation() {
 
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await Promise.all(
-          queries.map(async (question, index) => {
-            const responseData = await backendClient.fetchQuery(
-              "/processquery/",
-              question
-            );
-            if (responseData) {
-              // const response = formatMarkdown(responseData.message);
-              addResponse(responseData.message);
-              addApiResponse({
-                reponseMessage: responseData.message,
-                chunks: responseData.Chunks,
-                files: responseData.pdf_data.map((data: PdfData) => ({
-                  id: data.pdf_name,
-                  filename: data.pdf_name,
-                  url: data.url,
-                })),
-              });
-              setLoading(false);
-            }
-          })
-        );
-      } catch (e) {
-        console.error(e);
+    const fetchDataSequentially = async () => {
+      for (const [index, question] of queries.entries()) {
+        try {
+          const responseData = await backendClient.fetchQuery("/processquery/", question);
+          if (responseData) {
+            addResponse(responseData.message);
+            addApiResponse({
+              reponseMessage: responseData.message,
+              chunks: responseData.Chunks,
+              files: responseData.pdf_data.map((data: PdfData) => ({
+                id: data.pdf_name,
+                filename: data.pdf_name,
+                url: data.url,
+              })),
+            });
+          }
+        } catch (e) {
+          console.error(`Error fetching data for query index ${index}:`, e);
+          break; // Stop fetching further queries on error
+        }
       }
+      setLoading(false);
     };
 
-    if (queries.length > responses.length && userId) {
-      fetchData().then(() => {
-        console.log('Response saved successfully');
-    }).catch((error) => {
-        console.error('Failed to save response', error);
-    });}
+    if (queries.length > responses.length) {
+      fetchDataSequentially()
+        .then(() => {
+          console.log('Responses saved successfully');
+        })
+        .catch((error) => {
+          console.error('Failed to save responses', error);
+        });
+    }
   }, []);
 
   useEffect(() => {
