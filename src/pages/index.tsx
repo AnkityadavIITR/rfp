@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import type { NextPage } from "next";
 import { TitleAndDropdown } from "~/components/landing-page/TitleAndDropdown";
 import { useAuth } from "@clerk/nextjs";
+import { clearData } from "~/utils/store/questionStore";
 
 const LandingPage: NextPage = () => {
   const { isMobile } = useIsMobile()
@@ -14,6 +15,9 @@ const LandingPage: NextPage = () => {
     if(!userId){
       router.push("/signup").then(()=>console.log("Success")).catch((e)=>console.log("got error "))
     }
+  },[])
+  useEffect(()=>{
+    clearData();
   },[])
 
   return (
