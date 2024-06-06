@@ -45,6 +45,8 @@ export default function Conversation() {
 
 
   useEffect(()=>{
+    console.log("userId",userId);
+    
     if(!userId){
       router.push("/").catch((e)=>console.log(e))
     }
