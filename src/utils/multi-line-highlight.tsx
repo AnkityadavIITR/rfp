@@ -81,8 +81,8 @@ export const multiHighlight = (
   
   const options = {
     includeScore: true,
-    threshold: 0.1, // Adjust this threshold according to your requirement.
-    minMatchCharLength: 20, // You might want to increase this for sentences.
+    threshold: 0.3, // Adjust this threshold according to your requirement.
+    minMatchCharLength: 14, // You might want to increase this for sentences.
     shouldSort: true,
     findAllMatches: true,
     includeMatches: true,
