@@ -34,6 +34,8 @@ const AccordionComponent = () => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [editableResponse, setEditableResponse] = useState("");
+    const setActiveChunk=useQuestionStore((state)=>state.setActiveChunk);
+    const apiResponse=useQuestionStore((state)=>state.apiResponse)
     const [isHovered, setIsHovered] = useState(false);
     return (
         <Accordion
@@ -50,7 +52,10 @@ const AccordionComponent = () => {
                 >
                     <AccordionTrigger
                         className={responses[i] ? "p-[10px] text-left" : "p-[10px] text-left"}
-                        onClick={() => setActiveQuery(i)}
+                        onClick={() => {
+                            setActiveQuery(i)
+                            setActiveChunk(apiResponse[activeQuery]?.chunks[0]?.chunk || "")
+                        }}
                     >
                         {query}
                     </AccordionTrigger>
