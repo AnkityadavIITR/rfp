@@ -54,7 +54,7 @@ const AccordionComponent = () => {
                         className={responses[i] ? "p-[10px] text-left" : "p-[10px] text-left"}
                         onClick={() => {
                             setActiveQuery(i)
-                            setActiveChunk(apiResponse[activeQuery]?.chunks[0]?.chunk || "")
+                            setActiveChunk(apiResponse[i]?.chunks[0]?.chunk || "")
                         }}
                     >
                         {query}
