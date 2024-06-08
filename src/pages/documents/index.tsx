@@ -64,12 +64,13 @@ export default function Conversation() {
               })),
             });
           }
+          setLoading(false);
         } catch (e) {
           console.error(`Error fetching data for query index ${index}:`, e);
           break; // Stop fetching further queries on error
         }
       }
-      setLoading(false);
+      
     };
 
     if (queries.length > responses.length) {
