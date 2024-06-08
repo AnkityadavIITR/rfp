@@ -110,7 +110,7 @@ const useQuestionStore = create<QuestionState>()(
 );
 
 function clearData() {
-  useQuestionStore.setState({ queries: [], responses: [],fileUrls:[],apiResponse:[],askQuestion:false }); // Reset Zustand store
+  useQuestionStore.setState({ queries: [], responses: [],fileUrls:[],apiResponse:[],askQuestion:false,activeChunk:"" }); // Reset Zustand store
   localStorage.removeItem('questions-storage'); // Remove item from local storage
 }
 

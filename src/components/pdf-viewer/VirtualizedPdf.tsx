@@ -328,7 +328,7 @@ const VirtualizedPDF = forwardRef<PdfFocusHandler, VirtualizedPDFProps>(
             ) : null}
           </Document>
         ) : (
-          <div className="px-4 py-4">
+          <div className="px-4 py-4  overflow-y-scroll h-[90%]">
             <p className="text-[14px]">{activeChunk}</p>
           </div>
         )}
