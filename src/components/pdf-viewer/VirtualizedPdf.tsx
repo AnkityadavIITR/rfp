@@ -19,7 +19,7 @@ import {
 } from "~/components/pdf-viewer/pdfDisplayConstants";
 
 import type { SecDocument as PdfDocument } from "~/types/document";
-// import { usePdfFocusStore } from "~/utils/store/pdfFocusStore";
+import { useQuestionStore } from "~/utils/store/questionStore";
 
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/TextLayer.css";
@@ -138,15 +138,13 @@ const PageRenderer: React.FC<PageRenderer> = ({
   // console.log("pdfdocid",pdfFocusState.documentId);
   // console.log("fildid",file.id);
   // console.log("pdffocustate",pdfFocusState);
-  
-  
+
   const documentFocused = pdfFocusState.documentId === file.id;
-console.log("documentFocuse",documentFocused);
+  console.log("documentFocuse", documentFocused);
 
   useEffect(() => {
     maybeHighlight();
     // console.log("call the highlight");
-    
   }, [documentFocused, inView]);
 
   const maybeHighlight = useCallback(
@@ -157,7 +155,7 @@ console.log("documentFocuse",documentFocused);
         !isHighlighted
       ) {
         // console.log("pagenum in virtual",pdfFocusState.citation?.pageNumber);
-        
+
         multiHighlight(
           pdfFocusState.citation?.snippet,
           pageNumber,
@@ -166,7 +164,6 @@ console.log("documentFocuse",documentFocused);
         setIsHighlighted(true);
       }
       // console.log("call maybehilt");
-      
     }, 500),
     [pdfFocusState.citation?.snippet, pageNumber, isHighlighted]
   );
@@ -201,6 +198,7 @@ interface VirtualizedPDFProps {
   setIndex: (n: number) => void;
   setScaleFit: (n: number) => void;
   setNumPages: (n: number) => void;
+  type: string;
 }
 export interface PdfFocusHandler {
   scrollToPage: (page: number) => void;
@@ -208,7 +206,8 @@ export interface PdfFocusHandler {
 
 // eslint-disable-next-line react/display-name
 const VirtualizedPDF = forwardRef<PdfFocusHandler, VirtualizedPDFProps>(
-  ({ file, scale, setIndex, setScaleFit, setNumPages }, ref) => {
+  ({ file, scale, setIndex, setScaleFit, setNumPages, type }, ref) => {
+    const activeChunk = useQuestionStore((state) => state.activeChunk);
     const windowWidth = useWindowWidth();
     const windowHeight = useWindowHeight();
     const height = (windowHeight || 0) - PDF_HEADER_SIZE_PX;
@@ -293,40 +292,46 @@ const VirtualizedPDF = forwardRef<PdfFocusHandler, VirtualizedPDFProps>(
 
     return (
       <div
-        className={`relative h-[calc(100vh-44px)] w-full border-gray-pdf bg-gray-pdf`}
+        className={`border-gray-pdf bg-gray-pdf relative h-[calc(100vh-44px)] w-full`}
       >
-        <Document
-          key={file.url}
-          onItemClick={onItemClick}
-          file={file.url}
-          onLoadSuccess={onDocumentLoadSuccess}
-          loading={loadingDiv}
-        >
-          {pdf ? (
-            <List
-              ref={listRef}
-              width={newWidthPx + HORIZONTAL_GUTTER_SIZE_PX}
-              height={height}
-              itemCount={pdf.numPages}
-              itemSize={getPageHeight}
-              estimatedItemSize={
-                (PAGE_HEIGHT + VERTICAL_GUTTER_SIZE_PX) * scale
-              }
-            >
-              {({ index, style }) => (
-                <PageRenderer
-                  file={file}
-                  key={`page-${index}`}
-                  pageNumber={index}
-                  style={style}
-                  scale={scale}
-                  listWidth={newWidthPx}
-                  setPageInView={setIndex}
-                />
-              )}
-            </List>
-          ) : null}
-        </Document>
+        {type == "pdf" ? (
+          <Document
+            key={file.url}
+            onItemClick={onItemClick}
+            file={file.url}
+            onLoadSuccess={onDocumentLoadSuccess}
+            loading={loadingDiv}
+          >
+            {pdf ? (
+              <List
+                ref={listRef}
+                width={newWidthPx + HORIZONTAL_GUTTER_SIZE_PX}
+                height={height}
+                itemCount={pdf.numPages}
+                itemSize={getPageHeight}
+                estimatedItemSize={
+                  (PAGE_HEIGHT + VERTICAL_GUTTER_SIZE_PX) * scale
+                }
+              >
+                {({ index, style }) => (
+                  <PageRenderer
+                    file={file}
+                    key={`page-${index}`}
+                    pageNumber={index}
+                    style={style}
+                    scale={scale}
+                    listWidth={newWidthPx}
+                    setPageInView={setIndex}
+                  />
+                )}
+              </List>
+            ) : null}
+          </Document>
+        ) : (
+          <div className="px-4 py-4">
+            <p className="text-[14px]">{activeChunk}</p>
+          </div>
+        )}
       </div>
     );
   }

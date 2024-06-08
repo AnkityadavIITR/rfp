@@ -20,7 +20,8 @@ export interface Chunk{
 
 export interface PdfData{
   pdf_name:string,
-  url:string
+  url:string,
+  type:string,
 }
 
 export interface ApiResponse {
@@ -59,6 +60,7 @@ export default function Conversation() {
                 id: data.pdf_name,
                 filename: data.pdf_name,
                 url: data.url,
+                type:data.type
               })),
             });
           }

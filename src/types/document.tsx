@@ -14,5 +14,6 @@ export interface SecDocument{
   id:string,
   filename?:string,
   url: string;
+  type:string,
   color?: DocumentColorEnum;
 }

@@ -6,6 +6,7 @@ export const ChunkDisplay = () => {
     const { setPdfFocusState } = usePdfFocus();
     const apiResponse = useQuestionStore((state) => state.apiResponse);
     const activeQuery = useQuestionStore((state) => state.activeQuery);
+    const setActiveChunk=useQuestionStore((state)=>state.setActiveChunk)
 
     const handleCitationClick = (
       documentId: string,
@@ -22,7 +23,8 @@ export const ChunkDisplay = () => {
             return (
               <div
               key={i}
-                onClick={() =>
+                onClick={() =>{
+                  setActiveChunk(d.chunk)
                   handleCitationClick(
                     d.pdfName || "",
                     d.pageno,
@@ -34,6 +36,8 @@ export const ChunkDisplay = () => {
                       highlightColor: "yellow",
                     } as Citation
                   )
+
+                }
                 }
                 className="line-clamp-2 w-[200px] rounded-md border bg-gray-200 p-1 text-[12px] text-gray-700 hover:cursor-pointer hover:bg-slate-200"
               >

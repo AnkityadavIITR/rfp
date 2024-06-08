@@ -52,6 +52,7 @@ export const ViewPdf: React.FC<ViewPdfProps> = ({ file }) => {
         key={`${file.id}`}
         ref={pdfFocusRef}
         file={file}
+        type={file.type}
         setIndex={setCurrentPageNumber}
         scale={scale}
         setScaleFit={setScaleFit}

@@ -4,7 +4,7 @@ import { SecDocument } from "~/types/document";
 import cx from "classnames";
 import { DocumentColorEnum } from "~/utils/colors";
 import { useQuestionStore } from "~/utils/store/questionStore";
-
+import { Chunk } from "~/pages/documents";
 
 interface DisplayMultiplePdfsProps {
   fileUrls: SecDocument[];
@@ -36,7 +36,7 @@ export const DisplayMultiplePdfs: React.FC<DisplayMultiplePdfsProps> = ({ fileUr
             <div key={index}>
               <button
                 onClick={() => handlePdfFocus(file)}
-                className={`group flex h-[80px] w-[80px] items-end  justify-start border px-2 py-1 font-nunito text-sm font-bold ${isActivePdf(file)
+                className={`group flex h-[80px] w-[80px] items-end overflow-hidden  justify-start border px-2 py-1 font-nunito text-sm font-bold ${isActivePdf(file)
                   ? "border-l-0 bg-gray-pdf"
                   : "bg-white font-light text-gray-60 "
                   }`}
@@ -47,7 +47,7 @@ export const DisplayMultiplePdfs: React.FC<DisplayMultiplePdfsProps> = ({ fileUr
                     : ""
                     }`}
                 >
-                  <div className="text-left text-[11px] line-clamp-3">
+                  <div className="text-left text-[11px] line-clamp-1 overflow-hidden">
                     {file.filename}
                   </div>
                 </div>

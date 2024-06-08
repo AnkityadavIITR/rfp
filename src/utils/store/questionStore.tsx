@@ -5,7 +5,9 @@ interface FileUrl {
   id:string,
   filename: string;
   url: string;
+  type:string;
 }
+
 interface Chunk{
   chunk:string,
   fileUrl:string,
@@ -25,6 +27,8 @@ export interface QuestionState {
   apiResponse:Response[];
   askQuestion:boolean;
   setAskQuestion:(ask:boolean)=>void;
+  activeChunk:string;
+  setActiveChunk:(res:string)=>void;
   addApiResponse:(res:Response)=>void;
   setActiveQuery:(num:number)=>void;
   fileUrls:FileUrl[];
@@ -49,6 +53,11 @@ const useQuestionStore = create<QuestionState>()(
       setAskQuestion(ask) {
         set({askQuestion:ask});
       },
+      activeChunk:"",
+      setActiveChunk:(res)=>
+        set((state)=>({
+          activeChunk:res,
+        })),
       apiResponse:[],
       setActiveQuery:(num)=>
         set((state)=>({
