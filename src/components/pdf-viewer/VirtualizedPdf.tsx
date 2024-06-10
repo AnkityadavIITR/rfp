@@ -135,16 +135,12 @@ const PageRenderer: React.FC<PageRenderer> = ({
     },
     [showPageCanvas, listWidth]
   );
-  // console.log("pdfdocid",pdfFocusState.documentId);
-  // console.log("fildid",file.id);
-  // console.log("pdffocustate",pdfFocusState);
+
 
   const documentFocused = pdfFocusState.documentId === file.id;
-  console.log("documentFocuse", documentFocused);
 
   useEffect(() => {
     maybeHighlight();
-    // console.log("call the highlight");
   }, [documentFocused, inView]);
 
   const maybeHighlight = useCallback(
@@ -154,7 +150,6 @@ const PageRenderer: React.FC<PageRenderer> = ({
         pdfFocusState.citation?.pageNumber === pageNumber + 1 &&
         !isHighlighted
       ) {
-        // console.log("pagenum in virtual",pdfFocusState.citation?.pageNumber);
 
         multiHighlight(
           pdfFocusState.citation?.snippet,
