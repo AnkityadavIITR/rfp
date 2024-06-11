@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { use, useEffect, useState} from "react";
 import { useRouter } from "next/router";
 import { PdfFocusProvider } from "~/context/pdf";
 import AccordionComponent from "~/components/document/Accordion";
@@ -44,7 +44,7 @@ export default function Conversation() {
   const activeQuery = useQuestionStore((state) => state.activeQuery);
   const addApiResponse = useQuestionStore((state) => state.addApiResponse);
   const apiResponse = useQuestionStore((state) => state.apiResponse);
-
+  const setActiveChunk=useQuestionStore((state) => state.setActiveChunk);
 
   useEffect(() => {
     const fetchDataSequentially = async () => {
@@ -63,6 +63,9 @@ export default function Conversation() {
                 type:data.type
               })),
             });
+            if(responseData?.pdf_data[0]?.type==="csv"){
+              setActiveChunk(responseData?.Chunks[0]?.chunk|| "")
+            }
           }
           setLoading(false);
         } catch (e) {
