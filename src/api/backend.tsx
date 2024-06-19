@@ -148,6 +148,31 @@ class BackendClient {
       return undefined;
     }
   }
+  
+  public async fetchQueryWithScore(endpoint: string, query: string, score: number): Promise<ProcessQueryResponse | undefined> {
+    const url = backendUrl + endpoint;
+    const requestData = {
+      query: query,
+      score: score,
+    };
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      return response.json() as Promise<ProcessQueryResponse>;
+    } catch (e) {
+      console.log("error fetching query", e);
+      return undefined;
+    }
+  }
 }
 
 export const backendClient = new BackendClient();

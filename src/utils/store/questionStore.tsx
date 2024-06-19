@@ -18,6 +18,7 @@ interface Response{
   reponseMessage:string,
   files?:FileUrl[],
   chunks:Chunk[],
+  confidence_score:number
 }
 
 
@@ -33,6 +34,7 @@ export interface QuestionState {
   setActiveQuery:(num:number)=>void;
   fileUrls:FileUrl[];
   addFileUrl: (files: FileUrl) => void;
+  changeApiResponse:(index:number,res:Response)=>void;
   responses: string[];
   setResponseAtIndex: (index: number, newResponse: string) => void;
   addQueries: (questions: string[]) => void;
@@ -58,6 +60,10 @@ const useQuestionStore = create<QuestionState>()(
         set((state)=>({
           activeChunk:res,
         })),
+        changeApiResponse:(index,res)=>
+          set((state)=>({
+            apiResponse:[...state.apiResponse.slice(0,index),res,...state.apiResponse.slice(index+1)],
+          })),
       apiResponse:[],
       setActiveQuery:(num)=>
         set((state)=>({

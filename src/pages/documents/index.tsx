@@ -55,6 +55,7 @@ export default function Conversation() {
             addResponse(responseData.message);
             addApiResponse({
               reponseMessage: responseData.message,
+              confidence_score:80,
               chunks: responseData.Chunks,
               files: responseData.pdf_data.map((data: PdfData) => ({
                 id: data.pdf_name,
