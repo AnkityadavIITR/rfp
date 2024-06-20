@@ -29,6 +29,7 @@ const AccordionComponent = () => {
   const [score, setScore] = useState<number>(
     apiResponse[activeQuery]?.confidence_score || 80
   );
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSaveResponse = async (): Promise<void> => {
     if (queries[activeQuery] && editableResponse != "") {
@@ -46,32 +47,34 @@ const AccordionComponent = () => {
   };
 
   const handleQueryWithScore = async (): Promise<void> => {
-    if(queries[activeQuery]){
-
-    try {
-      const res = await backendClient.fetchQueryWithScore(
-        "/processquery/",
-        queries[activeQuery] || "",
-        score
-      );
-      if (res) {
-        const apiRes = {
-          reponseMessage: res.message,
-          confidence_score: score,
-          chunks: res.Chunks,
-          files: res.pdf_data.map((data: PdfData) => ({
-            id: data.pdf_name,
-            filename: data.pdf_name,
-            url: data.url,
-            type: data.type,
-          })),
-        };
-        changeApiResponse(activeQuery, apiRes);
+    if (queries[activeQuery]) {
+      try {
+        setLoading(true);
+        const res = await backendClient.fetchQueryWithScore(
+          "/processquery/",
+          queries[activeQuery] || "",
+          score
+        );
+        if (res) {
+          const apiRes = {
+            reponseMessage: res.message,
+            confidence_score: score,
+            chunks: res.Chunks,
+            files: res.pdf_data.map((data: PdfData) => ({
+              id: data.pdf_name,
+              filename: data.pdf_name,
+              url: data.url,
+              type: data.type,
+            })),
+          };
+          changeApiResponse(activeQuery, apiRes);
+        }
+      } catch (e) {
+        console.log("error saving response", e);
+      } finally {
+        setLoading(false);
       }
-    } catch (e) {
-      console.log("error saving response", e);
     }
-  }
   };
 
   const [isEditing, setIsEditing] = useState(false);
@@ -105,95 +108,114 @@ const AccordionComponent = () => {
             {query}
           </AccordionTrigger>
           <AccordionContent className="mb-0 bg-white p-[10px] text-gray-700">
-            {responses[i] ? (
+            {loading ?(
               <>
-                {!isEditing ? (
+                {responses[i] ? (
                   <>
-                    <div
-                      className="relative flex w-full rounded-xl border bg-blue-100"
-                      onMouseEnter={() => setIsHovered(true)}
-                      onMouseLeave={() => setIsHovered(false)}
-                    >
-                      <ReactMarkdown className="p-2">
-                        {responses[i]}
-                      </ReactMarkdown>
-                      {isHovered && (
+                    {!isEditing ? (
+                      <>
                         <div
-                          className="absolute right-[8px] top-[8px] bg-blue-100 hover:cursor-pointer"
-                          onClick={() => {
-                            setIsEditing(true);
-                            setEditableResponse(responses[i] || "");
-                          }}
+                          className="relative flex w-full rounded-xl border bg-blue-100"
+                          onMouseEnter={() => setIsHovered(true)}
+                          onMouseLeave={() => setIsHovered(false)}
                         >
-                          <SquarePen strokeWidth={1.25} size={20} />
+                          <ReactMarkdown className="p-2">
+                            {responses[i]}
+                          </ReactMarkdown>
+                          {isHovered && (
+                            <div
+                              className="absolute right-[8px] top-[8px] bg-blue-100 hover:cursor-pointer"
+                              onClick={() => {
+                                setIsEditing(true);
+                                setEditableResponse(responses[i] || "");
+                              }}
+                            >
+                              <SquarePen strokeWidth={1.25} size={20} />
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <div className="mt-2 flex w-full">
-                      <Slider
-                        defaultValue={[score]}
-                        max={100}
-                        step={1}
-                        onValueChange={(value) => setScore(value?.[0] || 80)}
-                      />
-                    </div>
-                    {score != 80 && (
-                      <div className="mt-2 flex w-full">
-                        <Button
-                          className="self-end"
-                          onClick={() => {
-                            handleQueryWithScore()
-                              .then(() => {
-                                console.log("Response saved successfully");
-                              })
-                              .catch((error) => {
-                                console.error("Failed to save response", error);
-                              });
-                          }}
-                        >
-                          <SendHorizontal size={20} strokeWidth={1.25} />
-                        </Button>
-                      </div>
+                        <div className="mt-2 flex w-full">
+                          <Slider
+                            defaultValue={[score]}
+                            max={100}
+                            step={1}
+                            onValueChange={(value) =>
+                              setScore(value?.[0] || 80)
+                            }
+                          />
+                        </div>
+                        {score != 80 && (
+                          <div className="mt-2 flex w-full">
+                            <Button
+                              className="self-end"
+                              onClick={() => {
+                                handleQueryWithScore()
+                                  .then(() => {
+                                    console.log("Response saved successfully");
+                                  })
+                                  .catch((error) => {
+                                    console.error(
+                                      "Failed to save response",
+                                      error
+                                    );
+                                  });
+                              }}
+                            >
+                              <SendHorizontal size={20} strokeWidth={1.25} />
+                            </Button>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <div className="w-full">
+                          <Textarea
+                            value={editableResponse}
+                            onChange={(e) =>
+                              setEditableResponse(e.target.value)
+                            }
+                            className="h-32 w-full rounded border p-2"
+                          />
+                        </div>
+                        <div className="mt-2 flex w-full gap-2">
+                          <Button
+                            className="self-end"
+                            onClick={() => {
+                              handleSaveResponse()
+                                .then(() => {
+                                  console.log("Response saved successfully");
+                                })
+                                .catch((error) => {
+                                  console.error(
+                                    "Failed to save response",
+                                    error
+                                  );
+                                });
+                            }}
+                          >
+                            Save Response
+                          </Button>
+                          <Button onClick={() => setIsEditing(false)}>
+                            Cancel
+                          </Button>
+                        </div>
+                      </>
                     )}
+                    <ChunkDisplay />
                   </>
                 ) : (
                   <>
-                    <div className="w-full">
-                      <Textarea
-                        value={editableResponse}
-                        onChange={(e) => setEditableResponse(e.target.value)}
-                        className="h-32 w-full rounded border p-2"
-                      />
-                    </div>
-                    <div className="mt-2 flex w-full gap-2">
-                      <Button
-                        className="self-end"
-                        onClick={() => {
-                          handleSaveResponse()
-                            .then(() => {
-                              console.log("Response saved successfully");
-                            })
-                            .catch((error) => {
-                              console.error("Failed to save response", error);
-                            });
-                        }}
-                      >
-                        Save Response
-                      </Button>
-                      <Button onClick={() => setIsEditing(false)}>
-                        Cancel
-                      </Button>
-                    </div>
+                    <div className="loader h-4 w-4 rounded-full border-2 border-gray-200 ease-linear"></div>
+                    <p className="mr-1">processing</p>
                   </>
                 )}
-                <ChunkDisplay />
               </>
-            ) : (
-              <>
+            ):(
+              <div className="flex w-full justify-center">
                 <div className="loader h-4 w-4 rounded-full border-2 border-gray-200 ease-linear"></div>
-                <p className="mr-1">processing</p>
-              </>
-            )}
+              </div>
+            )
+          }
           </AccordionContent>
         </AccordionItem>
       ))}
