@@ -108,7 +108,7 @@ const AccordionComponent = () => {
             {query}
           </AccordionTrigger>
           <AccordionContent className="mb-0 bg-white p-[10px] text-gray-700">
-            {!loading ?(
+            {!loading ? (
               <>
                 {responses[i] ? (
                   <>
@@ -134,7 +134,7 @@ const AccordionComponent = () => {
                             </div>
                           )}
                         </div>
-                        <div className="mt-2 flex gap-x-1 w-full">
+                        <div className="mt-2 flex w-full gap-x-1">
                           <Slider
                             defaultValue={[score]}
                             max={100}
@@ -147,8 +147,10 @@ const AccordionComponent = () => {
                         </div>
                         {score != 80 && (
                           <div className="mt-2 flex w-full">
-                            <Button
-                              className="self-end px-1 py-1"
+                            <SendHorizontal
+                              className="self-end border rounded-[2px] px-2 py-1"
+                              size={18}
+                              strokeWidth={1.25}
                               onClick={() => {
                                 handleQueryWithScore()
                                   .then(() => {
@@ -161,9 +163,7 @@ const AccordionComponent = () => {
                                     );
                                   });
                               }}
-                            >
-                              <SendHorizontal size={20} strokeWidth={1.25} />
-                            </Button>
+                            />
                           </div>
                         )}
                       </>
@@ -211,12 +211,11 @@ const AccordionComponent = () => {
                   </>
                 )}
               </>
-            ):(
+            ) : (
               <div className="flex w-full justify-center">
                 <div className="loader h-4 w-4 rounded-full border-2 border-gray-200 ease-linear"></div>
               </div>
-            )
-          }
+            )}
           </AccordionContent>
         </AccordionItem>
       ))}
