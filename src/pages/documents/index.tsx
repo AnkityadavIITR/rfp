@@ -50,7 +50,7 @@ export default function Conversation() {
     const fetchDataSequentially = async () => {
       for (const [index, question] of queries.entries()) {
         try {
-          const responseData = await backendClient.fetchQuery("/processquery/", question);
+          const responseData = await backendClient.fetchQueryWithScore("/processquery/", question,80);
           if (responseData) {
             addResponse(responseData.message);
             addApiResponse({

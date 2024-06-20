@@ -15,6 +15,7 @@ import { Textarea } from "../ui/textarea";
 import { SquarePen } from "lucide-react";
 import { Slider } from "../ui/slider";
 import { PdfData } from "~/pages/documents";
+import { SendHorizontal } from "lucide-react";
 
 const AccordionComponent = () => {
   const queries = useQuestionStore((state) => state.queries);
@@ -22,7 +23,9 @@ const AccordionComponent = () => {
   const setActiveQuery = useQuestionStore((state) => state.setActiveQuery);
   const activeQuery = useQuestionStore((state) => state.activeQuery);
   const apiResponse = useQuestionStore((state) => state.apiResponse);
-  const changeApiResponse=useQuestionStore((state)=>state.changeApiResponse);
+  const changeApiResponse = useQuestionStore(
+    (state) => state.changeApiResponse
+  );
   const [score, setScore] = useState<number>(
     apiResponse[activeQuery]?.confidence_score || 80
   );
@@ -43,32 +46,32 @@ const AccordionComponent = () => {
   };
 
   const handleQueryWithScore = async (): Promise<void> => {
-    if (queries[activeQuery] && editableResponse != "") {
-      try {
-        const res = await backendClient.fetchQueryWithScore(
-          "/save-qna-with-score/",
-          queries[activeQuery] || "",
-          score
-        );
-        if (res) {
-          const apiRes = {
-            reponseMessage: res.message,
-            confidence_score: score,
-            chunks: res.Chunks,
-            files: res.pdf_data.map((data: PdfData) => ({
-              id: data.pdf_name,
-              filename: data.pdf_name,
-              url: data.url,
-              type: data.type,
-            })),
-          };
-          changeApiResponse(activeQuery,apiRes);
+    if(queries[activeQuery]){
 
-        }
-      } catch (e) {
-        console.log("error saving response", e);
+    try {
+      const res = await backendClient.fetchQueryWithScore(
+        "/processquery/",
+        queries[activeQuery] || "",
+        score
+      );
+      if (res) {
+        const apiRes = {
+          reponseMessage: res.message,
+          confidence_score: score,
+          chunks: res.Chunks,
+          files: res.pdf_data.map((data: PdfData) => ({
+            id: data.pdf_name,
+            filename: data.pdf_name,
+            url: data.url,
+            type: data.type,
+          })),
+        };
+        changeApiResponse(activeQuery, apiRes);
       }
+    } catch (e) {
+      console.log("error saving response", e);
     }
+  }
   };
 
   const [isEditing, setIsEditing] = useState(false);
@@ -126,7 +129,7 @@ const AccordionComponent = () => {
                         </div>
                       )}
                     </div>
-                    <div>
+                    <div className="mt-2 flex w-full">
                       <Slider
                         defaultValue={[score]}
                         max={100}
@@ -134,20 +137,24 @@ const AccordionComponent = () => {
                         onValueChange={(value) => setScore(value?.[0] || 80)}
                       />
                     </div>
-                    <Button
-                      className="self-end"
-                      onClick={() => {
-                        handleQueryWithScore()
-                          .then(() => {
-                            console.log("Response saved successfully");
-                          })
-                          .catch((error) => {
-                            console.error("Failed to save response", error);
-                          });
-                      }}
-                    >
-                      process
-                    </Button>
+                    {score != 80 && (
+                      <div className="mt-2 flex w-full">
+                        <Button
+                          className="self-end"
+                          onClick={() => {
+                            handleQueryWithScore()
+                              .then(() => {
+                                console.log("Response saved successfully");
+                              })
+                              .catch((error) => {
+                                console.error("Failed to save response", error);
+                              });
+                          }}
+                        >
+                          <SendHorizontal size={20} strokeWidth={1.25} />
+                        </Button>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>

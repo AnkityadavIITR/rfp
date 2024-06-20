@@ -153,7 +153,7 @@ class BackendClient {
     const url = backendUrl + endpoint;
     const requestData = {
       query: query,
-      score: score,
+      confidence_score: score,
     };
     try {
       const response = await fetch(url, {
