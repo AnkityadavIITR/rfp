@@ -134,7 +134,7 @@ const AccordionComponent = () => {
                             </div>
                           )}
                         </div>
-                        <div className="mt-2 flex w-full">
+                        <div className="mt-2 flex gap-x-1 w-full">
                           <Slider
                             defaultValue={[score]}
                             max={100}
@@ -143,11 +143,12 @@ const AccordionComponent = () => {
                               setScore(value?.[0] || 80)
                             }
                           />
+                          <h1 className="text-[16px] font-medium">{score}%</h1>
                         </div>
                         {score != 80 && (
                           <div className="mt-2 flex w-full">
                             <Button
-                              className="self-end"
+                              className="self-end px-1 py-1"
                               onClick={() => {
                                 handleQueryWithScore()
                                   .then(() => {
