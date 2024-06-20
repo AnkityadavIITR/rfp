@@ -46,7 +46,7 @@ const AccordionComponent = () => {
     }
   };
 
-  const handleQueryWithScore = async (): Promise<void> => {
+  const handleQueryWithScore = async (): Promise<void> => {    
     if (queries[activeQuery]) {
       try {
         setLoading(true);
@@ -145,17 +145,12 @@ const AccordionComponent = () => {
                           />
                           <h1 className="text-[16px] font-medium">{score}%</h1>
                         </div>
-                        {score != 80 && (
-                          <div className="mt-2 flex w-full">
-                            <SendHorizontal
-                              className="self-end border rounded-[2px] px-2 py-1"
-                              size={18}
-                              strokeWidth={1.25}
+                        <div className="mt-2 flex justify-end w-full">
+                            <Button
+                              className={score===80 ?"px-[6px] py-1 opacity-50" : "px-[6px] py-1 "}
+                              disabled={score==80}
                               onClick={() => {
                                 handleQueryWithScore()
-                                  .then(() => {
-                                    console.log("Response saved successfully");
-                                  })
                                   .catch((error) => {
                                     console.error(
                                       "Failed to save response",
@@ -163,9 +158,10 @@ const AccordionComponent = () => {
                                     );
                                   });
                               }}
-                            />
+                            >
+                              <SendHorizontal size={20} strokeWidth={1.25} />
+                            </Button>
                           </div>
-                        )}
                       </>
                     ) : (
                       <>
