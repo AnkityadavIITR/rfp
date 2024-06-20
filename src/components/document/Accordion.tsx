@@ -108,7 +108,7 @@ const AccordionComponent = () => {
             {query}
           </AccordionTrigger>
           <AccordionContent className="mb-0 bg-white p-[10px] text-gray-700">
-            {loading ?(
+            {!loading ?(
               <>
                 {responses[i] ? (
                   <>
