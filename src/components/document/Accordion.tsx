@@ -23,6 +23,7 @@ const AccordionComponent = () => {
   const setActiveQuery = useQuestionStore((state) => state.setActiveQuery);
   const activeQuery = useQuestionStore((state) => state.activeQuery);
   const apiResponse = useQuestionStore((state) => state.apiResponse);
+  const changeResponse = useQuestionStore((state) => state.changeResponse);
   const changeApiResponse = useQuestionStore(
     (state) => state.changeApiResponse
   );
@@ -68,6 +69,7 @@ const AccordionComponent = () => {
             })),
           };
           changeApiResponse(activeQuery, apiRes);
+          changeResponse(activeQuery, res.message);
         }
       } catch (e) {
         console.log("error saving response", e);

@@ -35,6 +35,7 @@ export interface QuestionState {
   fileUrls:FileUrl[];
   addFileUrl: (files: FileUrl) => void;
   changeApiResponse:(index:number,res:Response)=>void;
+  changeResponse:(index:number,res:string)=>void;
   responses: string[];
   setResponseAtIndex: (index: number, newResponse: string) => void;
   addQueries: (questions: string[]) => void;
@@ -64,6 +65,10 @@ const useQuestionStore = create<QuestionState>()(
           set((state)=>({
             apiResponse:[...state.apiResponse.slice(0,index),res,...state.apiResponse.slice(index+1)],
           })),
+          changeResponse:(index, res)=>
+            set((state) => ({    
+              responses: [...state.responses.slice(0, index), res, ...state.responses.slice(index + 1)],
+            })),
       apiResponse:[],
       setActiveQuery:(num)=>
         set((state)=>({
