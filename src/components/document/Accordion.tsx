@@ -145,7 +145,7 @@ const AccordionComponent = () => {
         <AccordionItem
           value={`item-${i}`}
           className={
-            responses[i]!="" ? "bg-orange-200 text-left" : "bg-gray-200 text-left"
+            responses[i] ? "bg-orange-200 text-left" : "bg-gray-200 text-left"
           }
           key={i}
         >
