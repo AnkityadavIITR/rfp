@@ -30,7 +30,7 @@ const AccordionComponent = () => {
   const changeApiResponse = useQuestionStore(
     (state) => state.changeApiResponse
   );
-  const [score, setScore] = useState<number>(80);
+  
 
   const [isEditing, setIsEditing] = useState(false);
   const [isQuesEditing, setIsQuesEditing] = useState(false);
@@ -41,10 +41,13 @@ const AccordionComponent = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isQuesHovered, setIsQuesHovered] = useState<boolean>(false)
   const emptyResponseAtIndex = useQuestionStore((state) => state.emptyResponseAtIndex)
-
+  const [score, setScore] = useState<number>(
+    apiResponse[activeQuery]?.confidence_score || 80
+  );
   useEffect(() => {
-    setScore(apiResponse[activeQuery]?.confidence_score || 80);
-  }, [activeQuery]);
+        setScore(apiResponse[activeQuery]?.confidence_score || 80);
+
+  }, [activeQuery,apiResponse]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -150,12 +153,15 @@ const AccordionComponent = () => {
             className={
               responses[i] ? "p-[10px] " : "p-[10px]"
             }
-            onMouseEnter={() => setIsQuesHovered(true)}
+            onMouseEnter={() => {if(activeQuery==i){
+              setIsQuesHovered(true)
+            }}}
             onMouseLeave={() => setIsQuesHovered(false)}
             onClick={() => {
               if (!isQuesEditing) {
                 setActiveQuery(i);
               }
+              setScore(apiResponse[i]?.confidence_score || 80)
               setActiveChunk(apiResponse[i]?.chunks[0]?.chunk || "");
             }}
           >
@@ -164,9 +170,9 @@ const AccordionComponent = () => {
                 <div className="flex relative w-full">
                   <h1>{query}</h1>
                   {
-                    isQuesHovered &&
+                    isQuesHovered && activeQuery==i &&
                     <div
-                      className="absolute justify-end right-[20px] top-[1px] bg-orange-200 hover:cursor-pointer"
+                      className="absolute justify-end right-[-15px] top-[2px] bg-orange-200 hover:cursor-pointer z-20"
                       onClick={() => {
                         setIsQuesEditing(true);
                         setIndexWithEditQuestion(i);
