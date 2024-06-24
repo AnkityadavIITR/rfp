@@ -42,6 +42,8 @@ export interface QuestionState {
   removeQuery: (index:number)=>void;
   addResponse: (response: string) => void;
   clearQueries: () => void;
+  changeQueryatIndex:(index:number,question:string)=>void;
+  emptyResponseAtIndex:(index:number)=>void;
 
   setQuestions: (questions: string[]) => void;
 }
@@ -70,6 +72,7 @@ const useQuestionStore = create<QuestionState>()(
               responses: [...state.responses.slice(0, index), res, ...state.responses.slice(index + 1)],
             })),
       apiResponse:[],
+
       setActiveQuery:(num)=>
         set((state)=>({
           activeQuery:num,
@@ -87,6 +90,14 @@ const useQuestionStore = create<QuestionState>()(
           return state;
         }),
       responses: [],
+      emptyResponseAtIndex:(index)=>
+        set((state)=>({
+          responses:[...state.responses.slice(0,index),"",...state.responses.slice(index+1)],  
+        })),  
+      changeQueryatIndex:(index,question)=>
+        set((state)=>({
+          queries:[...state.queries.slice(0,index),question,...state.queries.slice(index+1)],
+        })),
       setResponseAtIndex: (index, newResponse) =>
         set((state) => {
           const updatedResponses = [...state.responses];

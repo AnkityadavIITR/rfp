@@ -16,6 +16,8 @@ import { SquarePen } from "lucide-react";
 import { Slider } from "../ui/slider";
 import { PdfData } from "~/pages/documents";
 import { SendHorizontal } from "lucide-react";
+import { partialUtil } from "zod/lib/helpers/partialUtil";
+import { Input } from "../ui/input";
 
 const AccordionComponent = () => {
   const queries = useQuestionStore((state) => state.queries);
@@ -24,10 +26,21 @@ const AccordionComponent = () => {
   const activeQuery = useQuestionStore((state) => state.activeQuery);
   const apiResponse = useQuestionStore((state) => state.apiResponse);
   const changeResponse = useQuestionStore((state) => state.changeResponse);
+  const changeQueryatIndex = useQuestionStore((state) => state.changeQueryatIndex);
   const changeApiResponse = useQuestionStore(
     (state) => state.changeApiResponse
   );
   const [score, setScore] = useState<number>(80);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [isQuesEditing, setIsQuesEditing] = useState(false);
+  const [indexWithEditQuestion, setIndexWithEditQuestion] = useState(-1)
+  const [editableResponse, setEditableResponse] = useState("");
+  const [editableQuestion, setEditableQuestion] = useState("")
+  const setActiveChunk = useQuestionStore((state) => state.setActiveChunk);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isQuesHovered, setIsQuesHovered] = useState<boolean>(false)
+  const emptyResponseAtIndex = useQuestionStore((state) => state.emptyResponseAtIndex)
 
   useEffect(() => {
     setScore(apiResponse[activeQuery]?.confidence_score || 80);
@@ -50,7 +63,7 @@ const AccordionComponent = () => {
     }
   };
 
-  const handleQueryWithScore = async (): Promise<void> => {    
+  const handleQueryWithScore = async (): Promise<void> => {
     if (queries[activeQuery]) {
       try {
         setLoading(true);
@@ -81,11 +94,43 @@ const AccordionComponent = () => {
       }
     }
   };
+  const handleQueryWithQuesChange = async (): Promise<void> => {
+    changeQueryatIndex(activeQuery, editableQuestion);
+    emptyResponseAtIndex(activeQuery)
+    setIsQuesEditing(false);
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [editableResponse, setEditableResponse] = useState("");
-  const setActiveChunk = useQuestionStore((state) => state.setActiveChunk);
-  const [isHovered, setIsHovered] = useState(false);
+    try {
+      setLoading(true);
+      const res = await backendClient.fetchQueryWithScore(
+        "/processquery/",
+        queries[activeQuery] || "",
+        score
+      );
+      if (res) {
+        const apiRes = {
+          reponseMessage: res.message,
+          confidence_score: score,
+          chunks: res.Chunks,
+          files: res.pdf_data.map((data: PdfData) => ({
+            id: data.pdf_name,
+            filename: data.pdf_name,
+            url: data.url,
+            type: data.type,
+          })),
+        };
+        changeApiResponse(activeQuery, apiRes);
+        changeResponse(activeQuery, res.message);
+      }
+    } catch (e) {
+      console.log("error saving response", e);
+    } finally {
+      setLoading(false);
+    }
+
+  };
+
+
+
   return (
     <Accordion
       type="single"
@@ -97,20 +142,80 @@ const AccordionComponent = () => {
         <AccordionItem
           value={`item-${i}`}
           className={
-            responses[i] ? "bg-orange-200 text-left" : "bg-gray-200 text-left"
+            responses[i]!="" ? "bg-orange-200 text-left" : "bg-gray-200 text-left"
           }
           key={i}
         >
           <AccordionTrigger
             className={
-              responses[i] ? "p-[10px] text-left" : "p-[10px] text-left"
+              responses[i] ? "p-[10px] " : "p-[10px]"
             }
+            onMouseEnter={() => setIsQuesHovered(true)}
+            onMouseLeave={() => setIsQuesHovered(false)}
             onClick={() => {
-              setActiveQuery(i);
+              if (!isQuesEditing) {
+                setActiveQuery(i);
+              }
               setActiveChunk(apiResponse[i]?.chunks[0]?.chunk || "");
             }}
           >
-            {query}
+            {
+              !isQuesEditing ? (
+                <div className="flex relative w-full">
+                  <h1>{query}</h1>
+                  {
+                    isQuesHovered &&
+                    <div
+                      className="absolute justify-end right-[20px] top-[1px] bg-orange-200 hover:cursor-pointer"
+                      onClick={() => {
+                        setIsQuesEditing(true);
+                        setIndexWithEditQuestion(i);
+                        setEditableQuestion(query || "");
+                      }}
+                    >
+                      <SquarePen strokeWidth={1.25} size={20} />
+                    </div>
+                  }
+                </div>
+              ) : (
+                <>
+                  {
+                    indexWithEditQuestion == i ? (
+                      <div className="flex relative justify-between w-[95%]">
+                        <Input
+                          className="w-full"
+                          value={editableQuestion}
+                          onChange={(e) => {
+                            setEditableQuestion(e.target.value)
+                          }}>
+                        </Input>
+                        <div className="absolute top-2 right-1 bg-white">
+                          <SendHorizontal onClick={handleQueryWithQuesChange} size={20} className="" strokeWidth={1.25} />
+                        </div>
+                      </div>
+
+                    ) : (
+                      <div className="flex justify-around">
+                        <h1>{query}</h1>
+                        {
+                          isQuesHovered &&
+                          <div
+                            className="hover:cursor-pointer"
+                            onClick={() => {
+                              setIsQuesEditing(true);
+                              setIndexWithEditQuestion(i);
+                              setEditableQuestion(query || "");
+                            }}
+                          >
+                            <SquarePen strokeWidth={1.25} size={20} className="" />
+                          </div>
+                        }
+                      </div>)
+                  }
+                </>
+              )
+            }
+
           </AccordionTrigger>
           <AccordionContent className="mb-0 bg-white p-[10px] text-gray-700">
             {!loading ? (
@@ -151,22 +256,22 @@ const AccordionComponent = () => {
                           <h1 className="text-[16px] font-medium">{score}%</h1>
                         </div>
                         <div className="mt-2 flex justify-end w-full">
-                            <Button
-                              className={score===80 ?"px-[6px] py-1 opacity-50" : "px-[6px] py-1 "}
-                              disabled={score==80}
-                              onClick={() => {
-                                handleQueryWithScore()
-                                  .catch((error) => {
-                                    console.error(
-                                      "Failed to save response",
-                                      error
-                                    );
-                                  });
-                              }}
-                            >
-                              <SendHorizontal size={20} strokeWidth={1.25} />
-                            </Button>
-                          </div>
+                          <Button
+                            className={score === 80 ? "px-[6px] py-1 opacity-50" : "px-[6px] py-1 "}
+                            disabled={score == 80}
+                            onClick={() => {
+                              handleQueryWithScore()
+                                .catch((error) => {
+                                  console.error(
+                                    "Failed to save response",
+                                    error
+                                  );
+                                });
+                            }}
+                          >
+                            <SendHorizontal size={20} strokeWidth={1.25} />
+                          </Button>
+                        </div>
                       </>
                     ) : (
                       <>
