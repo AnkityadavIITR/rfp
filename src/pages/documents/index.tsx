@@ -66,8 +66,8 @@ export default function Conversation() {
                 type:data.type
               })),
             });
-            if(responseData?.pdf_data[0]?.type==="csv" && activeChunk==""){
-              setActiveChunk(responseData?.Chunks[0]?.chunk|| "")
+            if (index === 0 && responseData?.pdf_data[0]?.type === "csv" && !activeChunk && responseData?.Chunks[0]?.chunk) {
+              setActiveChunk(responseData.Chunks[0].chunk);
             }
           }
           setLoading(false);

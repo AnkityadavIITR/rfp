@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React, { useEffect } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -27,9 +27,12 @@ const AccordionComponent = () => {
   const changeApiResponse = useQuestionStore(
     (state) => state.changeApiResponse
   );
-  const [score, setScore] = useState<number>(
-    apiResponse[activeQuery]?.confidence_score || 80
-  );
+  const [score, setScore] = useState<number>(80);
+
+  useEffect(() => {
+    setScore(apiResponse[activeQuery]?.confidence_score || 80);
+  }, [activeQuery]);
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSaveResponse = async (): Promise<void> => {
