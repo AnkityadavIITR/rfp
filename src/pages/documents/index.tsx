@@ -37,7 +37,6 @@ export default function Conversation() {
   const { isMobile } = useIsMobile();
   const { userId } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [getchunk,setGetChunk]=useState(false)
 
 
   const queries = useQuestionStore((state) => state.queries);
@@ -47,6 +46,7 @@ export default function Conversation() {
   const addApiResponse = useQuestionStore((state) => state.addApiResponse);
   const apiResponse = useQuestionStore((state) => state.apiResponse);
   const setActiveChunk=useQuestionStore((state) => state.setActiveChunk);
+  const activeChunk=useQuestionStore((state) => state.activeChunk);
 
   useEffect(() => {
     const fetchDataSequentially = async () => {
@@ -66,9 +66,8 @@ export default function Conversation() {
                 type:data.type
               })),
             });
-            if(responseData?.pdf_data[0]?.type==="csv" && !getchunk){
+            if(responseData?.pdf_data[0]?.type==="csv" && activeChunk==""){
               setActiveChunk(responseData?.Chunks[0]?.chunk|| "")
-              setGetChunk(true)
             }
           }
           setLoading(false);
