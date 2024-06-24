@@ -9,6 +9,7 @@ import { backendClient } from "~/api/backend";
 import { useQuestionStore, clearData } from "~/utils/store/questionStore";
 import MobileWarningComponent from "~/components/document/MobileWarningComponent";
 import { useAuth } from "@clerk/nextjs";
+import { set } from "lodash";
 
 
 export interface Chunk{
@@ -36,6 +37,7 @@ export default function Conversation() {
   const { isMobile } = useIsMobile();
   const { userId } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [getchunk,setGetChunk]=useState(false)
 
 
   const queries = useQuestionStore((state) => state.queries);
@@ -64,8 +66,9 @@ export default function Conversation() {
                 type:data.type
               })),
             });
-            if(responseData?.pdf_data[0]?.type==="csv"){
+            if(responseData?.pdf_data[0]?.type==="csv" && !getchunk){
               setActiveChunk(responseData?.Chunks[0]?.chunk|| "")
+              setGetChunk(true)
             }
           }
           setLoading(false);
