@@ -196,7 +196,16 @@ const AccordionComponent = () => {
                           }}>
                         </Input>
                         <div className="absolute top-2 right-1 bg-white">
-                          <SendHorizontal onClick={handleQueryWithQuesChange} size={20} className="" strokeWidth={1.25} />
+                          <SendHorizontal onClick={()=>{
+                            handleQueryWithQuesChange().catch((error) => {
+                              console.error(
+                                "Failed to save response",
+                                error
+                              );
+                            });
+
+                          }
+                            } size={20} className="" strokeWidth={1.25} />
                         </div>
                       </div>
 
