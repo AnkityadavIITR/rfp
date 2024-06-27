@@ -158,7 +158,7 @@ const PageRenderer: React.FC<PageRenderer> = ({
         );
         setIsHighlighted(true);
       }
-      // console.log("call maybehilt");
+      console.log("call maybehilt");
     }, 500),
     [pdfFocusState.citation?.snippet, pageNumber, isHighlighted]
   );
@@ -291,9 +291,9 @@ const VirtualizedPDF = forwardRef<PdfFocusHandler, VirtualizedPDFProps>(
       >
         {type == "pdf" ? (
           <Document
-            key={file.url}
+            key={file.url || "https://drive.google.com/file/d/1ZKZI9NS87H1S2DJwJAJKbXWkt9V9Bm6f/view?usp=sharing"}
             onItemClick={onItemClick}
-            file={file.url}
+            file={file.url || "https://drive.google.com/file/d/1ZKZI9NS87H1S2DJwJAJKbXWkt9V9Bm6f/view?usp=sharing"}
             onLoadSuccess={onDocumentLoadSuccess}
             loading={loadingDiv}
           >

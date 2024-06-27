@@ -24,6 +24,8 @@ export const ChunkDisplay = () => {
               <div
               key={i}
                 onClick={() =>{
+                  console.log("clicking on chunk",d.chunk)
+                  
                   setActiveChunk(d.chunk)
                   handleCitationClick(
                     d.pdfName || "",

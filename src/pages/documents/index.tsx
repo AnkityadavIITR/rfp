@@ -9,7 +9,7 @@ import { backendClient } from "~/api/backend";
 import { useQuestionStore, clearData } from "~/utils/store/questionStore";
 import MobileWarningComponent from "~/components/document/MobileWarningComponent";
 import { useAuth } from "@clerk/nextjs";
-import { set } from "lodash";
+import { add, set } from "lodash";
 
 
 export interface Chunk{
@@ -47,33 +47,47 @@ export default function Conversation() {
   const apiResponse = useQuestionStore((state) => state.apiResponse);
   const setActiveChunk=useQuestionStore((state) => state.setActiveChunk);
   const activeChunk=useQuestionStore((state) => state.activeChunk);
-
+  function dummyAsyncFunction() {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve('Dummy data');
+        }, 2000); // Simulating a delay of 2 seconds
+    });
+}
   useEffect(() => {
     const fetchDataSequentially = async () => {
       for (const [index, question] of queries.entries()) {
         try {
-          const responseData = await backendClient.fetchQueryWithScore("/processquery/", question,80);
-          if (responseData) {
-            addResponse(responseData.message);
+          const data = await dummyAsyncFunction();
+          console.log('Data fetched:', data);
+          addResponse("hey there");
             addApiResponse({
-              reponseMessage: responseData.message,
+              reponseMessage: "hey there",
               confidence_score:80,
-              chunks: responseData.Chunks,
-              files: responseData.pdf_data.map((data: PdfData) => ({
-                id: data.pdf_name,
-                filename: data.pdf_name,
-                url: data.url,
-                type:data.type
-              })),
+              chunks: [{
+                chunk:"The aggregate market value of the voting and non-voting common equity held by non-affiliates of the registrant as of June 30, 2021, the last business day of the registrant's most recently completed second fiscal quarter, was approximately $90.5 billion based upon the closing price reported for such date on the New York Stock Exchange The number of shares of the registrant's common stock outstanding as of February 22, 2022 was 1,954,464,088 DOCUMENTS INCORPORATED BY REFERENCE Portions of the registrant’s Definitive Proxy Statement relating to the Annual Meeting of Stockholders are incorporated by reference into Part III of this Annual Report on Form 10-K where indicated. Such Definitive Proxy Statement will be filed with the Securities and Exchange Commission within 120 days after the end of the registrant’s fiscal year ended December 31, 2021",
+                 fileUrl:"/uber-2021-10k.pdf",
+                 pdfName:"uber-2021-10k.pdf",
+                 pageno:1
+                },
+                {
+                chunk:"SPECIAL NOTE REGARDING FORWARD-LOOKING STATEMENTS This Annual Report on Form 10-K contains forward-looking statements within the meaning of the Private Securities Litigation Reform Act of 1995. All statements other than statements of historical facts contained in this Annual Report on Form 10-K, including statements regarding our future results of operations or financial condition, business strategy and plans, and objectives of management for future operations, are forward-looking statements. In some cases, you can identify forward-looking statements because they contain",
+                 fileUrl:"/uber-2021-10k.pdf",
+                 pdfName:"uber-2021-10k.pdf",
+                 pageno:3
+                }],
+                files: [{
+                id: "1",
+                filename: "test.pdf",
+                url: "/uber-2021-10k.pdf",
+                type: "pdf",
+              }]
             });
-            if (index === 0 && responseData?.pdf_data[0]?.type === "csv" && !activeChunk && responseData?.Chunks[0]?.chunk) {
-              setActiveChunk(responseData.Chunks[0].chunk);
-            }
-          }
-          setLoading(false);
-        } catch (e) {
+          }catch (e) {
           console.error(`Error fetching data for query index ${index}:`, e);
           break; // Stop fetching further queries on error
+        }finally {
+          setLoading(false);
         }
       }
       
@@ -177,7 +191,12 @@ export default function Conversation() {
               </div>
             ) : (
               <DisplayMultiplePdfs
-                fileUrls={apiResponse[activeQuery]?.files || []}
+                fileUrls={apiResponse[activeQuery]?.files || [{
+                  id: "1",
+                  filename: "test.pdf",
+                  url: "/uber-2021-10k.pdf",
+                  type: "pdf",
+                }]}
               />
             )}
           </div>
