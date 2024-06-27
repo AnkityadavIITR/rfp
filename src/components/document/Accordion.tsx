@@ -106,7 +106,7 @@ const AccordionComponent = () => {
       setLoading(true);
       const res = await backendClient.fetchQueryWithScore(
         "/processquery/",
-        queries[activeQuery] || "",
+        editableQuestion || "",
         score
       );
       if (res) {
